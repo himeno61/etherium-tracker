@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
+import { TransactionsService } from '../transactions/transactions.service';
+import { Transaction } from '../typeorm';
 
 const address = '0x6b175474e89094c44da98b954eedeac495271d0f';
 
@@ -46,7 +48,7 @@ async function collectData(contract) {
 
 @Injectable()
 export class Web3Service {
-  constructor() {
+  constructor(private transactionService: TransactionsService) {
     const provider = new Web3.providers.WebsocketProvider(
       `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_KEY}`,
     );
@@ -85,32 +87,37 @@ export class Web3Service {
           event.data,
           [event.topics[1], event.topics[2], event.topics[3]],
         );
-
         if (transaction.from === address || transaction.to === address) {
-          const block = await web3.eth.getBlock(event.blockNumber);
-          const dateTimeStamp = block.timestamp;
-          console.log('timestamp: ', dateTimeStamp);
-
           try {
-            if (transaction.from === address || transaction.to === address) {
-              console.log('Specified address sent an ERC-20 token!');
-              const contract = new web3.eth.Contract(abi, event.address);
-              const collectedData = await collectData(contract);
-              const unit = Object.keys(web3.utils.unitMap).find(
-                (key) =>
-                  web3.utils.unitMap[key] ===
-                  web3.utils
-                    .toBN(10)
-                    .pow(web3.utils.toBN(collectedData.decimals))
-                    .toString(),
-              );
+            const block = await web3.eth.getBlock(event.blockNumber);
+            const dateTimeStamp = Number(block.timestamp);
+            console.log('Specified address sent an ERC-20 token!');
+            const contract = new web3.eth.Contract(abi, event.address);
+            const collectedData = await collectData(contract);
+            const unit = Object.keys(web3.utils.unitMap).find(
+              (key) =>
+                web3.utils.unitMap[key] ===
+                web3.utils
+                  .toBN(10)
+                  .pow(web3.utils.toBN(collectedData.decimals))
+                  .toString(),
+            );
 
-              console.log(
-                `Transfer of ${web3.utils.fromWei(transaction.value)} ${
-                  collectedData.symbol
-                } from ${transaction.from} to ${transaction.to}`,
-              );
-            }
+            console.log(
+              `Transfer of ${web3.utils.fromWei(transaction.value)} ${
+                collectedData.symbol
+              } from ${transaction.from} to ${transaction.to}`,
+            );
+
+            const itemToStore: Partial<Transaction> = {
+              id: event.transactionHash,
+              from: transaction.from,
+              to: transaction.to,
+              value: transaction.value,
+              timestamp: new Date(dateTimeStamp * 1000),
+            };
+
+            await this.transactionService.storeTransaction(itemToStore);
           } catch (e) {
             console.log(e);
           }

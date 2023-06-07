@@ -18,4 +18,11 @@ export class TransactionsService {
       where: { timestamp: MoreThan(yesterday) },
     });
   }
+
+  async storeTransaction(transaction: Partial<Transaction>) {
+    console.log(`Storing transaction: ${transaction.id}`);
+    const transaction1 = this.transactionsRepository.save(transaction);
+    console.log('Stored');
+    return transaction1;
+  }
 }
