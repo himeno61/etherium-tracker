@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # environemnt variables
 .env*
+/pgdata/
