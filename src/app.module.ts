@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionsModule } from './transactions/transactions.module';
 import { Web3Module } from './web3/web3.module';
 import { BlacklistModule } from './blacklist/blacklist.module';
+import { AuthModule } from './auth/auth.module';
 import entities from './typeorm';
 
 @Module({
@@ -28,6 +29,7 @@ import entities from './typeorm';
     TransactionsModule,
     Web3Module,
     BlacklistModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
