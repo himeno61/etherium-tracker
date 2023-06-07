@@ -15,6 +15,11 @@ export class BlacklistEntity {
   })
   ipAddress: string;
 
+  @Column({
+    nullable: true,
+  })
+  reason: string;
+
   @CreateDateColumn()
   createdAt: Date;
 }
