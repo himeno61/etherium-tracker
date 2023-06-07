@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WSService } from './app.wsservice';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionsModule } from './transactions/transactions.module';
+import { Web3Module } from './web3/web3.module';
 import entities from './typeorm';
 
 @Module({
@@ -25,8 +25,9 @@ import entities from './typeorm';
       inject: [ConfigService],
     }),
     TransactionsModule,
+    Web3Module,
   ],
   controllers: [AppController],
-  providers: [AppService, WSService],
+  providers: [AppService],
 })
 export class AppModule {}

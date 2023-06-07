@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 
@@ -44,7 +45,7 @@ async function collectData(contract) {
 }
 
 @Injectable()
-export class WSService {
+export class Web3Service {
   constructor() {
     const provider = new Web3.providers.WebsocketProvider(
       `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_KEY}`,
