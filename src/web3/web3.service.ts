@@ -103,17 +103,19 @@ export class Web3Service {
                   .toString(),
             );
 
+            const value = `${web3.utils.fromWei(transaction.value)} ${
+              collectedData.symbol
+            }`;
+
             console.log(
-              `Transfer of ${web3.utils.fromWei(transaction.value)} ${
-                collectedData.symbol
-              } from ${transaction.from} to ${transaction.to}`,
+              `Transfer of ${value} from ${transaction.from} to ${transaction.to}`,
             );
 
             const itemToStore: Partial<Transaction> = {
               id: event.transactionHash,
               from: transaction.from,
               to: transaction.to,
-              value: transaction.value,
+              value: value,
               timestamp: new Date(dateTimeStamp * 1000),
             };
 
