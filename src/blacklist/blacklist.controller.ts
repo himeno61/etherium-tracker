@@ -1,15 +1,15 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { BasicStrategy } from '../auth/auth-basic.strategy';
 import { BlacklistEntity } from '../typeorm';
 import { BlacklistService } from './blacklist.service';
 import { CreateBlacklistDto } from './dtos/CreateBlacklistDto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('blacklist')
 export class BlacklistController {
   constructor(private readonly blacklistService: BlacklistService) {}
 
+  @UseGuards(AuthGuard('basic'))
   @Post()
-  @UseGuards(BasicStrategy)
   async create(
     @Body() blacklistDto: CreateBlacklistDto,
   ): Promise<BlacklistEntity> {
