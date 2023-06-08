@@ -27,11 +27,10 @@ We recommend using Nest.js with TYPEORM for the backend, and Infura RPC as the b
 
 ## Prerequisites to run project
 
-1. Obtain .env file with all necessary values
+1. Obtain `.env` file with all necessary values. Project contains `.env.example`with example values
+2. Go to the root of the project and run ```docker-compose up -d```
 
-| Variable name | Description |
-|---------------|-------------|
-| INFURA_KEY    |             |
+
 
 
 
